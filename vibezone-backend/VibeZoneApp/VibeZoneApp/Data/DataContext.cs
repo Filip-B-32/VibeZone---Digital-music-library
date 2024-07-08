@@ -13,8 +13,6 @@ namespace VibeZoneApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Artist>()
                 .HasMany(a => a.Albums)
                 .WithOne(al => al.Artist)
