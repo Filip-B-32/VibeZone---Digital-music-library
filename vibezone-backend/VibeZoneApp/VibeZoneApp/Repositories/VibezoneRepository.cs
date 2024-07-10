@@ -67,5 +67,29 @@ namespace VibeZoneApp.Repositories
             return artists.Concat<object>(albums).Concat(songs).ToList();
         }
 
+        public Artist GetArtistById(int id)
+        {
+            return _context.Artists
+                .Include(a => a.Albums)
+                .ThenInclude(al => al.Songs)
+                .FirstOrDefault(a => a.Id == id);
+        }
+
+        public Album GetAlbumById(int id)
+        {
+            return _context.Albums
+                .Include(al => al.Songs)
+                .Include(al => al.Artist) 
+                .FirstOrDefault(al => al.Id == id);
+        }
+
+        public Song GetSongById(int id)
+        {
+            return _context.Songs
+                .Include(s => s.Album)
+                .ThenInclude(al => al.Artist)
+                .FirstOrDefault(s => s.Id == id);
+        }
+
     }
 }

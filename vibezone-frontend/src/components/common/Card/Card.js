@@ -1,7 +1,7 @@
 import React from "react";
 import "./card.css";
 
-const Card = ({ item }) => {
+const Card = ({ item, onOpenModal }) => {
   return (
     <div className="a-box">
       <div className="img-container">
@@ -40,8 +40,8 @@ const Card = ({ item }) => {
             </p>
           </div>
         )}
-        <br></br>
-        <button class="space-btn">See details</button>
+        <br />
+        <button className="space-btn" onClick={() => onOpenModal(item)}>See details</button>
       </div>
     </div>
   );

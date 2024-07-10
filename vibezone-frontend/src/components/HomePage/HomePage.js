@@ -2,11 +2,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./home-page.css";
 import SearchBar from "../common/SearchBar/SearchBar";
 import Card from "../common/Card/Card";
+import DetailsPage from "../DetailsPage/DetailsPage";
 
 const HomePage = () => {
   const [artistData, setArtistData] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,6 +40,16 @@ const HomePage = () => {
     setIsSearching(true);
   }, []);
 
+  const handleOpenModal = (item) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
+
   const dataToDisplay =
     isSearching && searchResults.length > 0 ? searchResults : artistData;
 
@@ -49,10 +62,12 @@ const HomePage = () => {
           <p className="no-results">No results found</p>
         ) : (
           dataToDisplay.map((item) => (
-            <Card key={`${item.$id}`} item={item} />
+            <Card key={`${item.$id}`} item={item} onOpenModal={handleOpenModal} />
           ))
         )}
       </div>
+        
+      <DetailsPage isOpen={isModalOpen} onClose={handleCloseModal} item={selectedItem} />
     </div>
   );
 };

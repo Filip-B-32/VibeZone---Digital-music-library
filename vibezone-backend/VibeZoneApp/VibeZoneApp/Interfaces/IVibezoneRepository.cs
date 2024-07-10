@@ -8,5 +8,8 @@ namespace VibeZoneApp.Interfaces
         ICollection<Artist> GetArtists();
         ICollection<object> Search(string query);
         ICollection<object> GetAllData();
+        Artist GetArtistById(int id);
+        Album GetAlbumById(int id);
+        Song GetSongById(int id);
     }
 }
