@@ -1,19 +1,24 @@
 :root {
-  --background-color: #FFF5E1;
-  --text-color: #C80036;
+  --background-color: #fff5e1;
+  --text-color: #c80036;
+  --background-image: url('https://images.wondershare.com/filmora/article-images/music-studio.jpg');
 }
 
 body {
   margin: 0;
-  background-color: var(--background-color);
-  color: #0C1844;
+  color: #0c1844;
+  background-image: var(--background-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
 }
 
 .App {
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 20px;
 }
 
 .wrapper {
@@ -22,13 +27,13 @@ body {
   height: 75px;
   display: grid;
   place-content: center;
-  background-color: var(--background-color);
   font-family: "Oswald", sans-serif;
   font-size: 4rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--text-color);
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .wrapper > div {

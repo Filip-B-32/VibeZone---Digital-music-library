@@ -1,7 +1,29 @@
 .home-page-wrapper {
-  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.cards-wrapper{
-  margin: 20px 10px 10px 10px;
+.cards-wrapper {
+  width: 100%;
+  text-align: center;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
+  box-sizing: border-box;
+}
+
+.no-results{
+  color: white;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 910px) {
+  .cards-wrapper {
+    width: 100%;
+    margin: auto;
+  }
 }

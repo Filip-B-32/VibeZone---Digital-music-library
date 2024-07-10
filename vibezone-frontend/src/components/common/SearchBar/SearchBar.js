@@ -5,6 +5,7 @@ const SearchBar = ({ onSelect, onSearch }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [searchError, setSearchError] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -23,6 +24,7 @@ const SearchBar = ({ onSelect, onSearch }) => {
             setSearchError("");
           }
           setSuggestions(data);
+          setShowSuggestions(true);
         } catch (error) {
           console.error("Error fetching suggestions:", error);
           setSuggestions([]);
@@ -31,6 +33,7 @@ const SearchBar = ({ onSelect, onSearch }) => {
       } else {
         setSuggestions([]);
         setSearchError("");
+        setShowSuggestions(false);
       }
     };
 
@@ -60,6 +63,9 @@ const SearchBar = ({ onSelect, onSearch }) => {
       }
       if (query.trim().length > 1) {
         setSuggestions(data);
+        setShowSuggestions(true);
+      } else {
+        setShowSuggestions(false);
       }
       onSearch(data);
     } catch (error) {
@@ -74,6 +80,7 @@ const SearchBar = ({ onSelect, onSearch }) => {
     setQuery("");
     setSuggestions([]);
     setSearchError("");
+    setShowSuggestions(false);
     onSelect(suggestion);
   };
 
@@ -83,6 +90,19 @@ const SearchBar = ({ onSelect, onSearch }) => {
     }
     return "";
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (event.target.closest(".search-container") === null) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="search-container">
@@ -101,7 +121,7 @@ const SearchBar = ({ onSelect, onSearch }) => {
           alt="search icon"
         />
       </a>
-      {!searchError && suggestions.length > 0 && (
+      {!searchError && showSuggestions && suggestions.length > 0 && (
         <ul className="suggestions">
           {suggestions.map((suggestion) => (
             <li key={suggestion.id} onClick={() => handleSelect(suggestion)}>

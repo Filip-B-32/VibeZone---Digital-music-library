@@ -10,7 +10,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const url = `https://localhost:7153/api/VibeZone`;
+      const url = `https://localhost:7153/api/VibeZone/getAllData`;
       try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -46,10 +46,10 @@ const HomePage = () => {
 
       <div className="cards-wrapper">
         {isSearching && searchResults.length === 0 ? (
-          <p>No results found</p>
+          <p className="no-results">No results found</p>
         ) : (
           dataToDisplay.map((item) => (
-            <Card key={`${item.type}-${item.id}`} item={item} />
+            <Card key={`${item.$id}`} item={item} />
           ))
         )}
       </div>

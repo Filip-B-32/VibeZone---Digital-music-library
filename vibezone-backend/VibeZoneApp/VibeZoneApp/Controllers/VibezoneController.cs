@@ -28,15 +28,27 @@ namespace VibeZoneApp.Controllers
             return Ok(artists);
         }
 
+        [HttpGet("getAllData")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<object>))]
+
+        public IActionResult GetAllData()
+        {
+            var data = _vibezoneRepository.GetAllData();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(data);
+        }
+
         [HttpGet("search")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<object>))]
-        public IActionResult Search([FromQuery] string? query) // Make query parameter optional
+        public IActionResult Search([FromQuery] string? query)
         {
             IEnumerable<object> results;
 
             if (string.IsNullOrWhiteSpace(query))
             {
-                // If the search query is empty or whitespace, return all data
                 results = _vibezoneRepository.GetAllData();
             }
             else

@@ -32,13 +32,16 @@ namespace VibeZoneApp.Repositories
                 .ToList();
 
             var albums = _context.Albums
+                .Include(al => al.Artist) // Include the Artist entity
                 .Where(al => al.Title.Contains(query))
-                .Select(al => new { al.Id, al.Title, Type = "Album" })
+                .Select(al => new { al.Id, al.Title, al.ArtistId,ArtistName = al.Artist.Name, Type = "Album" })
                 .ToList();
 
             var songs = _context.Songs
+                .Include(s => s.Album) 
+                .ThenInclude(al => al.Artist)
                 .Where(s => s.Title.Contains(query))
-                .Select(s => new { s.Id, s.Title, Type = "Song" })
+                .Select(s => new { s.Id, s.Title, s.AlbumId, AlbumName = s.Album.Title, ArtistName = s.Album.Artist.Name, Type = "Song" })
                 .ToList();
 
             return artists.Concat<object>(albums).Concat(songs).ToList();
@@ -51,14 +54,18 @@ namespace VibeZoneApp.Repositories
                 .ToList();
 
             var albums = _context.Albums
-                .Select(al => new { al.Id, al.Title, Type = "Album" })
+                .Include(al => al.Artist) 
+                .Select(al => new { al.Id, al.Title, al.ArtistId, ArtistName = al.Artist.Name, Type = "Album" })
                 .ToList();
 
             var songs = _context.Songs
-                .Select(s => new { s.Id, s.Title, Type = "Song" })
+                .Include(s => s.Album) 
+                .ThenInclude(al => al.Artist)
+                .Select(s => new { s.Id, s.Title, s.AlbumId, AlbumName = s.Album.Title, ArtistName = s.Album.Artist.Name, Type = "Song" })
                 .ToList();
 
             return artists.Concat<object>(albums).Concat(songs).ToList();
         }
+
     }
 }
