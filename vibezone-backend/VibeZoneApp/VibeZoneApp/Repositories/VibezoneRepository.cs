@@ -2,6 +2,8 @@
 using VibeZoneApp.Models;
 using VibeZoneApp.Interfaces;
 using VibeZoneApp.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace VibeZoneApp.Repositories
 {
@@ -36,6 +38,23 @@ namespace VibeZoneApp.Repositories
 
             var songs = _context.Songs
                 .Where(s => s.Title.Contains(query))
+                .Select(s => new { s.Id, s.Title, Type = "Song" })
+                .ToList();
+
+            return artists.Concat<object>(albums).Concat(songs).ToList();
+        }
+
+        public ICollection<object> GetAllData()
+        {
+            var artists = _context.Artists
+                .Select(a => new { a.Id, a.Name, Type = "Artist" })
+                .ToList();
+
+            var albums = _context.Albums
+                .Select(al => new { al.Id, al.Title, Type = "Album" })
+                .ToList();
+
+            var songs = _context.Songs
                 .Select(s => new { s.Id, s.Title, Type = "Song" })
                 .ToList();
 

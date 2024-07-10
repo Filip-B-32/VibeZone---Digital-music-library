@@ -1,4 +1,5 @@
 ﻿using VibeZoneApp.Models;
+using System.Collections.Generic;
 
 namespace VibeZoneApp.Interfaces
 {
@@ -6,5 +7,6 @@ namespace VibeZoneApp.Interfaces
     {
         ICollection<Artist> GetArtists();
         ICollection<object> Search(string query);
+        ICollection<object> GetAllData();
     }
 }

@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./home-page.css";
 import SearchBar from "../common/SearchBar/SearchBar";
+import Card from "../common/Card/Card";
 
 const HomePage = () => {
-  const [artistData, setArtistData] = useState(null);
+  const [artistData, setArtistData] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,9 +16,9 @@ const HomePage = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
+        const result = await response.json();
+        const data = result.$values || [];
         setArtistData(data);
-        console.log(data); // Use data instead of artistData to see the fetched data
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -24,15 +27,32 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  const handleSelect = (suggestion) => {
-    console.log("Selected:", suggestion);
-    // You can now fetch additional data based on the selected suggestion or navigate to a different page
-  };
+  const handleSelect = useCallback((suggestion) => {
+    setSearchResults([suggestion]);
+    setIsSearching(true);
+  }, []);
+
+  const handleSearch = useCallback((results) => {
+    setSearchResults(results);
+    setIsSearching(true);
+  }, []);
+
+  const dataToDisplay =
+    isSearching && searchResults.length > 0 ? searchResults : artistData;
 
   return (
     <div className="home-page-wrapper">
-      <SearchBar onSelect={handleSelect} />
-      {/* Render artist data or other content */}
+      <SearchBar onSelect={handleSelect} onSearch={handleSearch} />
+
+      <div className="cards-wrapper">
+        {isSearching && searchResults.length === 0 ? (
+          <p>No results found</p>
+        ) : (
+          dataToDisplay.map((item) => (
+            <Card key={`${item.type}-${item.id}`} item={item} />
+          ))
+        )}
+      </div>
     </div>
   );
 };
