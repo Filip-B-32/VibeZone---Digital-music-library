@@ -55,10 +55,7 @@ const ArtistVariant = ({
           )}
         </p>
         {!isEditing && (
-          <>
-            <br></br>
-            <CustomButton title="Edit" onClick={handleUpdateClick} />
-          </>
+          <CustomButton title="Edit" onClick={handleUpdateClick} />
         )}
       </div>
       {Array.isArray(artist.albums) && (

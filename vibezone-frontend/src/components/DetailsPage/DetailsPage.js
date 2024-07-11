@@ -141,6 +141,26 @@ const DetailsPage = ({ isOpen, onClose, item }) => {
     }
   };
 
+  const handleDeleteArtist = async (artistId) => {
+    console.log("artistda: ", artistId);
+    try {
+      const response = await fetch(
+        `https://localhost:7153/api/VibeZone/${artistId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        onClose(); // Close the modal after deletion
+      } else {
+        console.error("Failed to delete artist");
+      }
+    } catch (error) {
+      console.error("Error deleting artist:", error);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       {itemData && currentItem.type === "Artist" && (
@@ -148,6 +168,7 @@ const DetailsPage = ({ isOpen, onClose, item }) => {
           artist={itemData}
           onAlbumClick={handleAlbumClick}
           onUpdateArtist={handleUpdateArtist}
+          onDeleteArtist={handleDeleteArtist}
         />
       )}
       {itemData && currentItem.type === "Album" && (
