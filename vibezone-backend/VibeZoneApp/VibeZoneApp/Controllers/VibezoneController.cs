@@ -2,6 +2,7 @@
 using VibeZoneApp.Interfaces;
 using VibeZoneApp.Models;
 using System.Collections.Generic;
+using VibeZoneApp.DTOs;
 
 namespace VibeZoneApp.Controllers
 {
@@ -109,6 +110,125 @@ namespace VibeZoneApp.Controllers
                 return BadRequest(ModelState);
 
             return Ok(song);
+        }
+
+        [HttpPost("create")]
+        [ProducesResponseType(201, Type = typeof(Artist))]
+        [ProducesResponseType(400)]
+        public IActionResult CreateArtist([FromBody] CreateArtistDto createArtistDto)
+        {
+            if (createArtistDto == null)
+            {
+                return BadRequest("CreateArtistDto object is null");
+            }
+
+            var artist = new Artist
+            {
+                Name = createArtistDto.Name,
+                Albums = new List<Album>()
+            };
+
+            if (createArtistDto.Albums != null)
+            {
+                foreach (var albumDto in createArtistDto.Albums)
+                {
+                    var album = new Album
+                    {
+                        Title = albumDto.Title,
+                        Description = albumDto.Description,
+                        Songs = new List<Song>()
+                    };
+
+                    if (albumDto.Songs != null)
+                    {
+                        foreach (var songDto in albumDto.Songs)
+                        {
+                            var song = new Song
+                            {
+                                Title = songDto.Title,
+                                Length = songDto.Length,
+                                Album = album
+                            };
+
+                            album.Songs.Add(song);
+                        }
+                    }
+
+                    album.Artist = artist;
+                    artist.Albums.Add(album);
+                }
+            }
+
+            _vibezoneRepository.CreateArtist(artist);
+
+            if (!_vibezoneRepository.Save())
+            {
+                return StatusCode(500, "Error saving artist to database");
+            }
+
+            return CreatedAtAction(nameof(GetArtistById), new { id = artist.Id }, artist);
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteArtist(int id)
+        {
+            var artistToDelete = _vibezoneRepository.GetArtistById(id);
+
+            if (artistToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _vibezoneRepository.DeleteArtist(id);
+
+            return NoContent();
+        }
+
+        [HttpPut("update/artist")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateArtistName([FromBody] UpdateArtistNameDto updateDto)
+        {
+            var artist = _vibezoneRepository.GetArtistById(updateDto.Id);
+            if (artist == null)
+            {
+                return NotFound();
+            }
+
+            _vibezoneRepository.UpdateArtistName(updateDto.Id, updateDto.NewName);
+            return NoContent();
+        }
+
+        [HttpPut("update/album")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateAlbumTitle([FromBody] UpdateAlbumTitleDto updateDto)
+        {
+            var album = _vibezoneRepository.GetAlbumById(updateDto.Id);
+            if (album == null)
+            {
+                return NotFound();
+            }
+
+            _vibezoneRepository.UpdateAlbumTitle(updateDto.Id, updateDto.NewTitle);
+            return NoContent();
+        }
+
+        [HttpPut("update/song")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateSongTitle([FromBody] UpdateSongTitleDto updateDto)
+        {
+            var song = _vibezoneRepository.GetSongById(updateDto.Id);
+            if (song == null)
+            {
+                return NotFound();
+            }
+
+            _vibezoneRepository.UpdateSongTitle(updateDto.Id, updateDto.NewTitle);
+            return NoContent();
         }
     }
 }

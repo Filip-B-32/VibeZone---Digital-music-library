@@ -91,5 +91,66 @@ namespace VibeZoneApp.Repositories
                 .FirstOrDefault(s => s.Id == id);
         }
 
+        public void CreateArtist(Artist artist)
+        {
+            if (artist == null)
+            {
+                throw new ArgumentNullException(nameof(artist));
+            }
+
+            _context.Artists.Add(artist);
+        }
+
+        public void DeleteArtist(int id)
+        {
+            var artistToDelete = _context.Artists
+                .Include(a => a.Albums)
+                .ThenInclude(al => al.Songs)
+                .FirstOrDefault(a => a.Id == id);
+
+            if (artistToDelete != null)
+            {
+                _context.Albums.RemoveRange(artistToDelete.Albums);
+                _context.Artists.Remove(artistToDelete);
+                _context.SaveChanges();
+            }
+        }
+
+
+        public void UpdateArtistName(int id, string newName)
+        {
+            var artist = _context.Artists.FirstOrDefault(a => a.Id == id);
+            if (artist != null)
+            {
+                artist.Name = newName;
+                _context.SaveChanges();
+            }
+        }
+
+        public void UpdateAlbumTitle(int id, string newTitle)
+        {
+            var album = _context.Albums.FirstOrDefault(al => al.Id == id);
+            if (album != null)
+            {
+                album.Title = newTitle;
+                _context.SaveChanges();
+            }
+        }
+
+        public void UpdateSongTitle(int id, string newTitle)
+        {
+            var song = _context.Songs.FirstOrDefault(s => s.Id == id);
+            if (song != null)
+            {
+                song.Title = newTitle;
+                _context.SaveChanges();
+            }
+        }
+
+        public bool Save()
+        {
+            return _context.SaveChanges() > 0;
+        }
+
     }
 }

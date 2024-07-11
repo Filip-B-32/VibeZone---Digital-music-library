@@ -16,12 +16,15 @@ namespace VibeZoneApp.Data
             modelBuilder.Entity<Artist>()
                 .HasMany(a => a.Albums)
                 .WithOne(al => al.Artist)
-                .HasForeignKey(al => al.ArtistId);
+                .HasForeignKey(al => al.ArtistId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Album>()
                 .HasMany(al => al.Songs)
                 .WithOne(s => s.Album)
-                .HasForeignKey(s => s.AlbumId);
+                .HasForeignKey(s => s.AlbumId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+
     }
 }
