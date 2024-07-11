@@ -3,6 +3,8 @@ import "./home-page.css";
 import SearchBar from "../common/SearchBar/SearchBar";
 import Card from "../common/Card/Card";
 import DetailsPage from "../DetailsPage/DetailsPage";
+import CustomButton from "../common/CustomButton/CustomButton";
+import AddArtistModal from "../AddArtistModal/AddArtistModal";
 
 const HomePage = () => {
   const [artistData, setArtistData] = useState([]);
@@ -10,6 +12,7 @@ const HomePage = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isAddArtistModalOpen, setIsAddArtistModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,19 +53,33 @@ const HomePage = () => {
     setSelectedItem(null);
   };
 
+  const handleOpenAddArtistModal = () => {
+    setIsAddArtistModalOpen(true);
+  };
+
+  const handleCloseAddArtistModal = () => {
+    setIsAddArtistModalOpen(false);
+  };
+
   const dataToDisplay =
     isSearching && searchResults.length > 0 ? searchResults : artistData;
 
   return (
     <div className="home-page-wrapper">
       <SearchBar onSelect={handleSelect} onSearch={handleSearch} />
-
+      <div className="button-wrapper">
+        <CustomButton title={"Add new artist"} onClick={handleOpenAddArtistModal} />
+      </div>
       <div className="cards-wrapper">
         {isSearching && searchResults.length === 0 ? (
           <p className="no-results">No results found</p>
         ) : (
           dataToDisplay.map((item) => (
-            <Card key={`${item.$id}`} item={item} onOpenModal={handleOpenModal} />
+            <Card
+              key={`${item.$id}`}
+              item={item}
+              onOpenModal={handleOpenModal}
+            />
           ))
         )}
       </div>
@@ -74,6 +91,11 @@ const HomePage = () => {
           item={selectedItem}
         />
       )}
+
+      <AddArtistModal
+        isOpen={isAddArtistModalOpen}
+        onClose={handleCloseAddArtistModal}
+      />
     </div>
   );
 };

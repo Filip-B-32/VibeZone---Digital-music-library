@@ -1,0 +1,60 @@
+.add-artist-modal-content {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.albums-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(300px, 1fr);
+  gap: 20px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.album-section {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.song-section {
+  margin-top: 10px;
+  padding-left: 15px;
+  border-left: 2px solid #ccc;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+label {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+h2,
+h3,
+h4 {
+  color: #c80036;
+}
+
+input {
+  color: #c80036;
+}
+
+.name-paragraph {
+  flex: 1;
+  margin: 0;
+}
+
+.name {
+  display: inline;
+}

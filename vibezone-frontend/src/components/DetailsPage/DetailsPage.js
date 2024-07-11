@@ -63,35 +63,107 @@ const DetailsPage = ({ isOpen, onClose, item }) => {
     setCurrentItem({ id: artistId, type: "Artist" });
   };
 
-  const handleClose = () => {
-    setCurrentItem(null);
-    setItemData(null);
-    onClose();
+  const handleUpdateArtist = async (artistId, newName) => {
+    try {
+      const response = await fetch(
+        "https://localhost:7153/api/VibeZone/update/artist",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: artistId, newName }),
+        }
+      );
+
+      if (response.ok) {
+        setItemData((prevData) => ({
+          ...prevData,
+          name: newName,
+        }));
+      } else {
+        console.error("Failed to update artist name");
+      }
+    } catch (error) {
+      console.error("Error updating artist name:", error);
+    }
   };
 
-  if (!currentItem) {
-    return null;
-  }
+  const handleUpdateAlbum = async (albumId, newTitle) => {
+    try {
+      const response = await fetch(
+        "https://localhost:7153/api/VibeZone/update/album",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: albumId, newTitle }),
+        }
+      );
+
+      if (response.ok) {
+        setItemData((prevData) => ({
+          ...prevData,
+          title: newTitle,
+        }));
+      } else {
+        console.error("Failed to update album title");
+      }
+    } catch (error) {
+      console.error("Error updating album title:", error);
+    }
+  };
+
+  const handleUpdateSong = async (songId, newTitle) => {
+    try {
+      const response = await fetch(
+        "https://localhost:7153/api/VibeZone/update/song",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: songId, newTitle }),
+        }
+      );
+
+      if (response.ok) {
+        setItemData((prevData) => ({
+          ...prevData,
+          title: newTitle,
+        }));
+      } else {
+        console.error("Failed to update song title");
+      }
+    } catch (error) {
+      console.error("Error updating song title:", error);
+    }
+  };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose}>
-      {itemData && (
-        <div className="variant-wrapper">
-          <h1 className="type-title">{currentItem.type}</h1>
-          {currentItem.type === "Artist" && (
-            <ArtistVariant artist={itemData} onAlbumClick={handleAlbumClick} />
-          )}
-          {currentItem.type === "Album" && (
-            <AlbumVariant album={itemData} onArtistClick={handleArtistClick} />
-          )}
-          {currentItem.type === "Song" && (
-            <SongVariant
-              song={itemData}
-              onAlbumClick={handleAlbumClick}
-              onArtistClick={handleArtistClick}
-            />
-          )}
-        </div>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      {itemData && currentItem.type === "Artist" && (
+        <ArtistVariant
+          artist={itemData}
+          onAlbumClick={handleAlbumClick}
+          onUpdateArtist={handleUpdateArtist}
+        />
+      )}
+      {itemData && currentItem.type === "Album" && (
+        <AlbumVariant
+          album={itemData}
+          onArtistClick={handleArtistClick}
+          onUpdateAlbum={handleUpdateAlbum}
+        />
+      )}
+      {itemData && currentItem.type === "Song" && (
+        <SongVariant
+          song={itemData}
+          onAlbumClick={handleAlbumClick}
+          onArtistClick={handleArtistClick}
+          onUpdateSong={handleUpdateSong}
+        />
       )}
     </Modal>
   );

@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import "./variant.css";
+import CustomButton from "../../common/CustomButton/CustomButton";
 
-const AlbumVariant = ({ album, onArtistClick }) => {
+const AlbumVariant = ({ album, onArtistClick, onUpdateAlbum }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(album.title);
+
+  const handleUpdateClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleTitleChange = (e) => {
+    setNewTitle(e.target.value);
+  };
+
+  const handleTitleBlur = () => {
+    setIsEditing(false);
+    if (newTitle !== album.title) {
+      onUpdateAlbum(album.id, newTitle);
+    }
+  };
+
   return (
     <div>
-      <p className="name-paragraph">
-        Title: <span className="name">{album.title}</span>
-      </p>
+      <div className="flex-container">
+        <p className="name-paragraph">
+          Title:{" "}
+          {isEditing ? (
+            <input
+              type="text"
+              value={newTitle}
+              onChange={handleTitleChange}
+              onBlur={handleTitleBlur}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleTitleBlur();
+              }}
+              autoFocus
+            />
+          ) : (
+            <span className="name">{album.title}</span>
+          )}
+        </p>
+        {!isEditing && (
+          <>
+            <br></br>
+            <CustomButton title="Edit" onClick={handleUpdateClick} />
+          </>
+        )}
+      </div>
       <p>{album.description}</p>
       <p>
         Artist:{" "}

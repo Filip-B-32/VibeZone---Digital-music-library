@@ -21,6 +21,15 @@
   font-weight: 600;
 }
 
+.button-wrapper{
+  width: 100%;
+  min-height: 70px;
+  background-color: #fff5e1d0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 910px) {
   .cards-wrapper {
     width: 100%;

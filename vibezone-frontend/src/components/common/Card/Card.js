@@ -1,5 +1,6 @@
 import React from "react";
 import "./card.css";
+import CustomButton from "../CustomButton/CustomButton";
 
 const Card = ({ item, onOpenModal }) => {
   return (
@@ -41,7 +42,7 @@ const Card = ({ item, onOpenModal }) => {
           </div>
         )}
         <br />
-        <button className="space-btn" onClick={() => onOpenModal(item)}>See details</button>
+        <CustomButton title={"See details"} onClick={() => onOpenModal(item)}/>
       </div>
     </div>
   );
