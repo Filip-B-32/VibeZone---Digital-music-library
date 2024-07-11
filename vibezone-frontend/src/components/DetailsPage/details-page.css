@@ -1,0 +1,10 @@
+.variant-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.type-title{
+    color: #C80036;
+}

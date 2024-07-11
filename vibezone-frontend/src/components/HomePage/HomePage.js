@@ -66,8 +66,14 @@ const HomePage = () => {
           ))
         )}
       </div>
-        
-      <DetailsPage isOpen={isModalOpen} onClose={handleCloseModal} item={selectedItem} />
+
+      {selectedItem && (
+        <DetailsPage
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          item={selectedItem}
+        />
+      )}
     </div>
   );
 };

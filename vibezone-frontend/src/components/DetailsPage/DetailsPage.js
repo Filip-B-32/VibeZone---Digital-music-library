@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import "./details-page.css";
 import Modal from "../common/Modal/Modal";
+import ArtistVariant from "./modal-variants/ArtistVariant";
+import AlbumVariant from "./modal-variants/AlbumVariant";
+import SongVariant from "./modal-variants/SongVariant";
 
 const DetailsPage = ({ isOpen, onClose, item }) => {
   const [itemData, setItemData] = useState(null);
+  const [currentItem, setCurrentItem] = useState(item);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (item && item.id && item.type) {
+      if (currentItem && currentItem.id && currentItem.type) {
         let url = "";
 
-        switch (item.type) {
+        switch (currentItem.type) {
           case "Artist":
-            url = `https://localhost:7153/api/VibeZone/getArtist/${item.id}`;
+            url = `https://localhost:7153/api/VibeZone/getArtist/${currentItem.id}`;
             break;
           case "Album":
-            url = `https://localhost:7153/api/VibeZone/getAlbum/${item.id}`;
+            url = `https://localhost:7153/api/VibeZone/getAlbum/${currentItem.id}`;
             break;
           case "Song":
-            url = `https://localhost:7153/api/VibeZone/getSong/${item.id}`;
+            url = `https://localhost:7153/api/VibeZone/getSong/${currentItem.id}`;
             break;
           default:
             break;
@@ -49,71 +53,43 @@ const DetailsPage = ({ isOpen, onClose, item }) => {
     if (isOpen) {
       fetchData();
     }
-  }, [isOpen, item]);
+  }, [isOpen, currentItem]);
 
-  if (!item) {
+  const handleAlbumClick = (albumId) => {
+    setCurrentItem({ id: albumId, type: "Album" });
+  };
+
+  const handleArtistClick = (artistId) => {
+    setCurrentItem({ id: artistId, type: "Artist" });
+  };
+
+  const handleClose = () => {
+    setCurrentItem(null);
+    setItemData(null);
+    onClose();
+  };
+
+  if (!currentItem) {
     return null;
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       {itemData && (
-        <div>
-          <h1>{item.type}</h1>
-          {item.type === "Artist" && (
-            <>
-              <p>Name: {itemData.name}</p>
-              {Array.isArray(itemData.albums) && (
-                <div>
-                  <h2>Albums:</h2>
-                  {itemData.albums.map((album) => (
-                    <div key={album.id} className="album">
-                      <p>Title: {album.title}</p>
-                      <p>Description: {album.description}</p>
-                      {Array.isArray(album.songs) && album.songs.length > 0 && (
-                        <div className="songs">
-                          <h3>Songs:</h3>
-                          <ul>
-                            {album.songs.map((song) => (
-                              <li key={song.id}>
-                                {song.title} - {song.length}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
+        <div className="variant-wrapper">
+          <h1 className="type-title">{currentItem.type}</h1>
+          {currentItem.type === "Artist" && (
+            <ArtistVariant artist={itemData} onAlbumClick={handleAlbumClick} />
           )}
-          {item.type === "Album" && (
-            <>
-              <p>Title: {itemData.title}</p>
-              <p>Description: {itemData.description}</p>
-              <p>Artist: {itemData.artist?.name}</p>
-              {Array.isArray(itemData.songs) && itemData.songs.length > 0 && (
-                <div className="songs">
-                  <h3>Songs:</h3>
-                  <ul>
-                    {itemData.songs.map((song) => (
-                      <li key={song.id}>
-                        {song.title} - {song.length}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </>
+          {currentItem.type === "Album" && (
+            <AlbumVariant album={itemData} onArtistClick={handleArtistClick} />
           )}
-          {item.type === "Song" && (
-            <>
-              <p>Title: {itemData.title}</p>
-              <p>Length: {itemData.length}</p>
-              <p>Album: {itemData.album?.title}</p>
-              <p>Artist: {itemData.album?.artist?.name}</p>
-            </>
+          {currentItem.type === "Song" && (
+            <SongVariant
+              song={itemData}
+              onAlbumClick={handleAlbumClick}
+              onArtistClick={handleArtistClick}
+            />
           )}
         </div>
       )}

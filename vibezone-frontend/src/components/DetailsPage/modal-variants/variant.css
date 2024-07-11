@@ -1,0 +1,33 @@
+p {
+  font-weight: 400;
+  color: #0c1844;
+}
+
+.name-paragraph {
+  font-size: 20px;
+}
+
+.data-link:link,
+.data-link:visited {
+  color: #c80036;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.data-link:link:active,
+.data-link:visited:active {
+  color: #ff6969;
+}
+
+.name {
+  color: #ff6969;
+  font-weight: 700;
+}
+
+.title-subvariant {
+  color: #c80036;
+}
+
+.album-description{
+    font-weight: 500;
+}
